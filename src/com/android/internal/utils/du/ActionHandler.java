@@ -123,6 +123,7 @@ public class ActionHandler {
     public static final String SYSTEMUI_TASK_WAKE_DEVICE = "task_wake_device";
     public static final String SYSTEMUI_TASK_STOP_SCREENPINNING = "task_stop_screenpinning";
     public static final String SYSTEMUI_TASK_APP_PICKER = "task_app_picker";
+    public static final String SYSTEMUI_TASK_VOLUME_PANEL = "task_volume_panel";
 
     public static final String INTENT_SHOW_POWER_MENU = "action_handler_show_power_menu";
     public static final String INTENT_TOGGLE_SCREENRECORD = "action_handler_toggle_screenrecord";
@@ -159,6 +160,7 @@ public class ActionHandler {
         ImeArrowRight(SYSTEMUI_TASK_IME_NAVIGATION_RIGHT, SYSTEMUI, "label_action_ime_right", "ic_sysbar_ime_right"),
         ImeArrowUp(SYSTEMUI_TASK_IME_NAVIGATION_UP, SYSTEMUI, "label_action_ime_up", "ic_sysbar_ime_up"),
         AppPicker(SYSTEMUI_TASK_APP_PICKER, SYSTEMUI, "label_action_app_picker", "ic_sysbar_app_picker");
+        VolumePanel(SYSTEMUI_TASK_VOLUME_PANEL, SYSTEMUI, "label_action_volume_panel", "ic_sysbar_volume_panel");
 
         String mAction;
         String mResPackage;
@@ -195,7 +197,7 @@ public class ActionHandler {
             SystemAction.StopScreenPinning, SystemAction.ImeArrowDown,
             SystemAction.ImeArrowLeft, SystemAction.ImeArrowRight,
             SystemAction.ImeArrowUp, SystemAction.InAppSearch,
-            SystemAction.AppPicker
+            SystemAction.AppPicker, SystemAction.VolumePanel
     };
 
     public static class ActionIconResources {
@@ -570,6 +572,9 @@ public class ActionHandler {
             return;
         } else if (action.equals(SYSTEMUI_TASK_APP_PICKER)) {
             startAppPicker(context);
+	    return;
+        } else if (action.equals(SYSTEMUI_TASK_VOLUME_PANEL)) {
+            volumePanel(context);
             return;
         }
     }
@@ -936,5 +941,9 @@ public class ActionHandler {
                 Slog.w(TAG, "No activity to handle application picker.", e);
             }
         }
+    }
+    public static void volumePanel(Context context) {
+        AudioManager am = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
+        am.adjustVolume(AudioManager.ADJUST_SAME, AudioManager.FLAG_SHOW_UI);
     }
 }
