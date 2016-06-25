@@ -123,6 +123,7 @@ public class ActionHandler {
     public static final String SYSTEMUI_TASK_WAKE_DEVICE = "task_wake_device";
     public static final String SYSTEMUI_TASK_STOP_SCREENPINNING = "task_stop_screenpinning";
     public static final String SYSTEMUI_TASK_APP_PICKER = "task_app_picker";
+    public static final String SYSTEMUI_TASK_CLEAR_NOTIFICATIONS = "task_clear_notifications";
     public static final String SYSTEMUI_TASK_VOLUME_PANEL = "task_volume_panel";
 
     public static final String INTENT_SHOW_POWER_MENU = "action_handler_show_power_menu";
@@ -159,7 +160,8 @@ public class ActionHandler {
         ImeArrowLeft(SYSTEMUI_TASK_IME_NAVIGATION_LEFT, SYSTEMUI, "label_action_ime_left", "ic_sysbar_ime_left"),
         ImeArrowRight(SYSTEMUI_TASK_IME_NAVIGATION_RIGHT, SYSTEMUI, "label_action_ime_right", "ic_sysbar_ime_right"),
         ImeArrowUp(SYSTEMUI_TASK_IME_NAVIGATION_UP, SYSTEMUI, "label_action_ime_up", "ic_sysbar_ime_up"),
-        AppPicker(SYSTEMUI_TASK_APP_PICKER, SYSTEMUI, "label_action_app_picker", "ic_sysbar_app_picker");
+        AppPicker(SYSTEMUI_TASK_APP_PICKER, SYSTEMUI, "label_action_app_picker", "ic_sysbar_app_picker"),
+        ClearNotifications(SYSTEMUI_TASK_CLEAR_NOTIFICATIONS, SYSTEMUI, "label_action_clear_notifications", "ic_sysbar_clear_notifications"),
         VolumePanel(SYSTEMUI_TASK_VOLUME_PANEL, SYSTEMUI, "label_action_volume_panel", "ic_sysbar_volume_panel");
 
         String mAction;
@@ -197,7 +199,8 @@ public class ActionHandler {
             SystemAction.StopScreenPinning, SystemAction.ImeArrowDown,
             SystemAction.ImeArrowLeft, SystemAction.ImeArrowRight,
             SystemAction.ImeArrowUp, SystemAction.InAppSearch,
-            SystemAction.AppPicker, SystemAction.VolumePanel
+            SystemAction.AppPicker, SystemAction.VolumePanel ,
+	    SystemAction.ClearNotifications
     };
 
     public static class ActionIconResources {
@@ -359,6 +362,16 @@ public class ActionHandler {
             if (service != null) {
                 try {
                     service.showCustomIntentAfterKeyguard(intent);
+                } catch (RemoteException e) {
+                }
+            }
+        }
+
+        private static void clearAllNotifications() {
+            IStatusBarService service = getStatusBarService();
+            if (service != null) {
+                try {
+                    service.onClearAllNotifications(ActivityManager.getCurrentUser());
                 } catch (RemoteException e) {
                 }
             }
@@ -573,6 +586,9 @@ public class ActionHandler {
         } else if (action.equals(SYSTEMUI_TASK_APP_PICKER)) {
             startAppPicker(context);
 	    return;
+        } else if (action.equals(SYSTEMUI_TASK_CLEAR_NOTIFICATIONS)) {
+            StatusBarHelper.clearAllNotifications();
+            return;
         } else if (action.equals(SYSTEMUI_TASK_VOLUME_PANEL)) {
             volumePanel(context);
             return;
