@@ -669,6 +669,7 @@ public class ActionHandler {
         if (lastTask != null) {
             am.moveTaskToFront(lastTask.id, ActivityManager.MOVE_TASK_NO_USER_ACTION);
         }
+        cancelPreloadRecentApps();
     }
 
     private static ActivityManager.RunningTaskInfo getLastTask(Context context,
